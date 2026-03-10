@@ -1,7 +1,14 @@
 <?php
-$conn = new mysqli("localhost", "root", "abcd1234", "travelit.sql");
+
+$host = "localhost";
+$user = "root";
+$password = "";
+$database = "travelit";
+
+$conn = new mysqli($host, $user, $password, $database);
 
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    die("Database connection failed: " . $conn->connect_error);
 }
+
 ?>

@@ -130,61 +130,6 @@ $(document).ready(function(){
 });
 </script>
 
-<!-- BOOKING MODAL -->
-<div class="modal fade" id="bookingModal" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content p-3">
-
-      <div class="modal-header">
-        <h5 class="modal-title text-dark">Book Travel Package</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-
-      <div class="modal-body">
-
-        <form id="popupBookingForm">
-
-          <input type="hidden" name="package_id" id="modalPackageId">
-
-          <div class="mb-3">
-            <label class="form-label text-dark">Full Name</label>
-            <input type="text" name="name" class="form-control" required>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label text-dark">Email</label>
-            <input type="email" name="email" class="form-control" required>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label text-dark">Phone</label>
-            <input type="text" name="phone" class="form-control" required>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label text-dark">Travel Date</label>
-            <input type="date" name="travel_date" class="form-control" required>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label text-dark">Number of People</label>
-            <input type="number" name="num_people" class="form-control" required>
-          </div>
-
-          <button type="submit" class="btn btn-success w-100">
-            Submit Booking
-          </button>
-
-        </form>
-
-        <div id="bookingResponse" class="mt-3"></div>
-
-      </div>
-
-    </div>
-  </div>
-</div>
-
 <footer class="bg-black text-center text-light py-4 mt-5">
     <div class="container">
         <h5 class="fw-bold">Travelit</h5>
@@ -200,6 +145,92 @@ $(document).ready(function(){
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Booking Modal -->
+<div class="modal fade" id="bookingModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-dark">
+      <div class="modal-header">
+        <h5 class="modal-title">Book Package</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="popupBookingForm">
+          <input type="hidden" name="package_id" id="modalPackageId">
+          <div class="mb-2">
+            <label>Your Name</label>
+            <input type="text" name="name" class="form-control" required>
+          </div>
+          <div class="mb-2">
+            <label>Email</label>
+            <input type="email" name="email" class="form-control" required>
+          </div>
+          <div class="mb-2">
+            <label>Phone</label>
+            <input type="text" name="phone" class="form-control" required>
+          </div>
+          <div class="mb-2">
+            <label>Travel Date</label>
+            <input type="date" name="travel_date" class="form-control" required>
+          </div>
+          <div class="mb-2">
+            <label>Number of People</label>
+            <input type="number" name="num_people" class="form-control" min="1" required>
+          </div>
+          <button type="submit" class="btn btn-success w-100">Send Booking Request</button>
+        </form>
+        <div id="bookingResponse" class="mt-2 text-center fw-bold"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+$(document).ready(function(){
+
+    // Open booking modal when book button clicked
+    $(document).on("click", ".bookBtn", function(){
+        let packageId = $(this).data("id");
+        $("#modalPackageId").val(packageId);
+
+        let modal = new bootstrap.Modal(document.getElementById("bookingModal"));
+        modal.show();
+    });
+
+    // Submit booking form
+    $("#popupBookingForm").submit(function(e){
+        e.preventDefault();
+
+        let form = $(this);
+        $("#bookingResponse").html(""); // clear previous messages
+
+        $.ajax({
+            url: "api/book_package.php",
+            method: "POST",
+            data: form.serialize(),
+            dataType: "json",
+            success: function(response){
+                if(response.status === "success"){
+                    $("#bookingResponse").html("<span class='text-success'>" + response.message + "</span>");
+                    form[0].reset();
+                } else {
+                    $("#bookingResponse").html("<span class='text-danger'>" + response.message + "</span>");
+
+                    if(response.message === "Please login first."){
+                        setTimeout(function(){
+                            window.location.href = "login.php";
+                        }, 1500);
+                    }
+                }
+            },
+            error: function(){
+                $("#bookingResponse").html("<span class='text-danger'>Booking failed. Try again.</span>");
+            }
+        });
+    });
+
+});
+</script>
 
 </body>
 </html>

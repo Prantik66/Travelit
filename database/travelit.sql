@@ -1,162 +1,229 @@
--- MySQL dump 10.13  Distrib 8.0.42, for Win64 (x86_64)
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
 --
--- Host: localhost    Database: travelit_db
--- ------------------------------------------------------
--- Server version	8.0.42
+-- Host: 127.0.0.1
+-- Generation Time: Mar 10, 2026 at 11:07 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.0.30
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8mb4 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `travelit`
+--
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `bookings`
 --
 
-DROP TABLE IF EXISTS `bookings`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `bookings` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `user_id` int NOT NULL,
-  `package_id` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `user_name` varchar(255) DEFAULT NULL,
+  `user_email` varchar(255) DEFAULT NULL,
+  `user_phone` varchar(50) DEFAULT NULL,
+  `package_id` int(11) NOT NULL,
   `travel_date` date NOT NULL,
-  `num_people` int NOT NULL,
+  `num_people` int(11) NOT NULL,
   `total_price` decimal(10,2) NOT NULL,
-  `status` varchar(50) DEFAULT 'pending',
-  `booking_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `transaction_id` varchar(100) DEFAULT NULL,
+  `status` enum('pending_payment','confirmed','cancelled') DEFAULT 'pending_payment',
+  `booking_date` timestamp NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `bookings`
 --
 
-LOCK TABLES `bookings` WRITE;
-/*!40000 ALTER TABLE `bookings` DISABLE KEYS */;
-INSERT INTO `bookings` VALUES (1,1,2,'2026-02-20',1,10000.00,'pending','2026-02-18 05:51:34'),(2,1,1,'2026-02-20',1,15000.00,'pending','2026-02-18 06:13:25');
-/*!40000 ALTER TABLE `bookings` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `bookings` (`id`, `user_id`, `user_name`, `user_email`, `user_phone`, `package_id`, `travel_date`, `num_people`, `total_price`, `transaction_id`, `status`, `booking_date`) VALUES
+(1, 1, NULL, NULL, NULL, 2, '2026-02-20', 1, 10000.00, NULL, 'confirmed', '2026-02-18 05:51:34'),
+(2, 1, NULL, NULL, NULL, 1, '2026-02-20', 1, 15000.00, NULL, 'confirmed', '2026-02-18 06:13:25'),
+(3, 0, NULL, NULL, NULL, 1, '2026-03-19', 1, 15000.00, NULL, 'cancelled', '2026-03-10 09:07:38'),
+(4, 1, NULL, NULL, NULL, 1, '2026-03-27', 1, 15000.00, NULL, 'cancelled', '2026-03-10 09:44:00'),
+(5, 1, NULL, NULL, NULL, 1, '2026-03-27', 1, 15000.00, NULL, 'cancelled', '2026-03-10 09:44:05'),
+(6, 1, NULL, NULL, NULL, 1, '2026-04-03', 1, 15000.00, NULL, 'cancelled', '2026-03-10 09:53:30'),
+(7, 1, NULL, NULL, NULL, 1, '2026-04-08', 1, 15000.00, NULL, 'cancelled', '2026-03-10 09:53:35'),
+(8, 1, NULL, NULL, NULL, 1, '2026-04-08', 1, 15000.00, NULL, 'cancelled', '2026-03-10 09:53:36'),
+(9, 1, NULL, NULL, NULL, 1, '2026-04-08', 1, 15000.00, NULL, 'confirmed', '2026-03-10 09:55:18'),
+(10, 1, NULL, NULL, NULL, 1, '2026-04-08', 1, 15000.00, NULL, 'confirmed', '2026-03-10 10:00:25');
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `destinations`
 --
 
-DROP TABLE IF EXISTS `destinations`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `destinations` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL,
   `name` varchar(100) DEFAULT NULL,
-  `description` text,
-  `image` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `description` text DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `destinations`
 --
 
-LOCK TABLES `destinations` WRITE;
-/*!40000 ALTER TABLE `destinations` DISABLE KEYS */;
-INSERT INTO `destinations` VALUES (1,'Kashmir','Paradise on Earth with mountains and lakes.','kashmir.avif'),(2,'Darjeeling','Beautiful hill station with tea gardens.','darjeeling.avif'),(3,'Delhi','Capital city of India with historical monuments.','delhi.avif');
-/*!40000 ALTER TABLE `destinations` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `destinations` (`id`, `name`, `description`, `image`) VALUES
+(1, 'Kashmir', 'Paradise on Earth with mountains and lakes.', 'kashmir.avif'),
+(2, 'Darjeeling', 'Beautiful hill station with tea gardens.', 'darjeeling.avif'),
+(3, 'Delhi', 'Capital city of India with historical monuments.', 'delhi.avif');
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `feedback`
 --
 
-DROP TABLE IF EXISTS `feedback`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `feedback` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `user_id` int DEFAULT NULL,
-  `message` text,
-  `rating` int DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `message` text DEFAULT NULL,
+  `rating` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `feedback`
 --
 
-LOCK TABLES `feedback` WRITE;
-/*!40000 ALTER TABLE `feedback` DISABLE KEYS */;
-/*!40000 ALTER TABLE `feedback` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `feedback` (`id`, `user_id`, `message`, `rating`) VALUES
+(5, 1, 'hahaa less go', NULL),
+(6, 1, 'sdhasdjfsdj', 1);
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `packages`
 --
 
-DROP TABLE IF EXISTS `packages`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `packages` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `destination_id` int DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `destination_id` int(11) DEFAULT NULL,
   `days` varchar(50) DEFAULT NULL,
   `transport` varchar(50) DEFAULT NULL,
-  `price` int DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `destination_id` (`destination_id`),
-  CONSTRAINT `packages_ibfk_1` FOREIGN KEY (`destination_id`) REFERENCES `destinations` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `price` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `packages`
 --
 
-LOCK TABLES `packages` WRITE;
-/*!40000 ALTER TABLE `packages` DISABLE KEYS */;
-INSERT INTO `packages` VALUES (1,1,'5 Days','Flight + Cab',15000),(2,2,'4 Days','Train + Cab',10000),(3,3,'3 Days','Train',8000);
-/*!40000 ALTER TABLE `packages` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `packages` (`id`, `destination_id`, `days`, `transport`, `price`) VALUES
+(1, 1, '5 Days', 'Flight + Cab', 15000),
+(2, 2, '4 Days', 'Train + Cab', 10000),
+(3, 3, '3 Days', 'Train', 8000);
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `users`
 --
 
-DROP TABLE IF EXISTS `users`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL,
   `name` varchar(100) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
-  `password` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  `password` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-LOCK TABLES `users` WRITE;
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+INSERT INTO `users` (`id`, `name`, `email`, `password`) VALUES
+(1, 'Prantik', 'pihukesariya@gmail.com', '$2y$10$kkiASuWe.MRRU7XxJ2SDP.KAOwxhMw7QMjH8Xbfe2hKZLoUYvlnx2');
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `bookings`
+--
+ALTER TABLE `bookings`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `destinations`
+--
+ALTER TABLE `destinations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `feedback`
+--
+ALTER TABLE `feedback`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `packages`
+--
+ALTER TABLE `packages`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `destination_id` (`destination_id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `bookings`
+--
+ALTER TABLE `bookings`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `destinations`
+--
+ALTER TABLE `destinations`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `feedback`
+--
+ALTER TABLE `feedback`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `packages`
+--
+ALTER TABLE `packages`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `packages`
+--
+ALTER TABLE `packages`
+  ADD CONSTRAINT `packages_ibfk_1` FOREIGN KEY (`destination_id`) REFERENCES `destinations` (`id`);
+COMMIT;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2026-03-09 21:09:29
