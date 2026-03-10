@@ -21,130 +21,66 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
 $(document).ready(function(){
 
-    // Get destination_id from URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const destination_id = urlParams.get('destination_id');
-
-    $.ajax({
-        url: "api/get_packages.php",
-        method: "GET",
-        data: destination_id ? { destination_id: destination_id } : {},
-        success: function(data){
-            let packages = JSON.parse(data);
-            let html = "";
-
-            if(packages.length === 0){
-                html = "<p class='text-center'>No packages available.</p>";
-            } else {
-                packages.forEach(function(pkg){
-                    html += `
-                        <div class="col-md-6 col-lg-4">
-                            <div class="card shadow-lg mb-4 p-3">
-                                <div class="card-body text-center">
-                                    <h3 class="text-warning">₹${pkg.price}</h3>
-                                    <hr>
-                                    <p><strong>Duration:</strong> ${pkg.days}</p>
-                                    <p><strong>Transport:</strong> ${pkg.transport}</p>
-
-                                    <button 
-                                        class="btn btn-primary w-100 bookBtn"
-                                        data-id="${pkg.id}">
-                                        Book Package
-                                    </button>
-
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-            }
-
-            $("#packageList").html(html);
+    // Load packages
+    $.get("api/get_packages.php", function(data){
+        let packages = JSON.parse(data);
+        let html = "";
+        if(packages.length === 0){
+            html = "<p class='text-center'>No packages available.</p>";
+        } else {
+            packages.forEach(pkg => {
+                html += `
+                <div class="col-md-6 col-lg-4">
+                    <div class="card shadow-lg mb-4 p-3 text-center">
+                        <h3 class="text-warning">₹${pkg.price}</h3>
+                        <hr>
+                        <p><strong>Duration:</strong> ${pkg.days}</p>
+                        <p><strong>Transport:</strong> ${pkg.transport}</p>
+                        <button class="btn btn-primary w-100 bookBtn" data-id="${pkg.id}" data-destination="${pkg.destination}" data-days="${pkg.days}" data-transport="${pkg.transport}" data-price="${pkg.price}">
+                            Book Package
+                        </button>
+                    </div>
+                </div>`;
+            });
         }
+        $("#packageList").html(html);
     });
 
-        // Open popup when Book Package clicked
+    // Open booking modal
     $(document).on("click", ".bookBtn", function(){
-
-        let packageId = $(this).data("id");
-
-        $("#modalPackageId").val(packageId);
-
-        let modal = new bootstrap.Modal(document.getElementById("bookingModal"));
-        modal.show();
+        const btn = $(this);
+        $("#modalPackageId").val(btn.data("id"));
+        $("#modalDestination").val(btn.data("destination"));
+        $("#modalDays").val(btn.data("days"));
+        $("#modalTransport").val(btn.data("transport"));
+        $("#modalPrice").val(btn.data("price"));
+        new bootstrap.Modal(document.getElementById("bookingModal")).show();
     });
 
+    // Submit booking
     $("#popupBookingForm").submit(function(e){
-
-    e.preventDefault();
-
+        e.preventDefault();
         $.ajax({
-            url: "api/book_package.php",
+            url: "api/send_booking_email.php",
             method: "POST",
             data: $(this).serialize(),
             success: function(res){
-                $("#bookingResponse").html(
-                    "<span class='text-success'>Booking request sent!</span>"
-                );
-            }
-        });
-
-    });
-
-    // Booking form submission
-    $(document).on("submit", ".bookingForm", function(e){
-        e.preventDefault();
-
-        let form = $(this);
-        let messageBox = form.next(".bookingMessage");
-
-        $.ajax({
-            url: "api/book_package.php",
-            method: "POST",
-            data: form.serialize(),
-            dataType: "json",
-            success: function(response){
-
-                if(response.status === "success"){
-                    messageBox.html("<span class='text-success'>" + response.message + "</span>");
-                } else {
-                    messageBox.html("<span class='text-danger'>" + response.message + "</span>");
-
-                    if(response.message === "Please login first."){
-                        setTimeout(function(){
-                            window.location.href = "login.php";
-                        }, 1500);
-                    }
-                }
+                $("#bookingResponse").html("<span class='text-success'>Booking request sent! Admin will contact you soon.</span>");
+                $("#popupBookingForm")[0].reset();
             },
             error: function(){
-                messageBox.html("<span class='text-danger'>Booking failed.</span>");
+                $("#bookingResponse").html("<span class='text-danger'>Failed to send booking request.</span>");
             }
         });
     });
 
 });
 </script>
-
-<footer class="bg-black text-center text-light py-4 mt-5">
-    <div class="container">
-        <h5 class="fw-bold">Travelit</h5>
-        <p>Premium travel experiences across India.</p>
-        <div>
-            <a href="#" class="text-light me-3">About</a>
-            <a href="#" class="text-light me-3">Contact</a>
-            <a href="#" class="text-light">Privacy Policy</a>
-        </div>
-        <hr class="bg-secondary">
-        <p class="mb-0">© 2026 Travelit. All Rights Reserved.</p>
-    </div>
-</footer>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <!-- Booking Modal -->
 <div class="modal fade" id="bookingModal" tabindex="-1" aria-hidden="true">
@@ -157,6 +93,11 @@ $(document).ready(function(){
       <div class="modal-body">
         <form id="popupBookingForm">
           <input type="hidden" name="package_id" id="modalPackageId">
+          <input type="hidden" name="destination" id="modalDestination">
+          <input type="hidden" name="days" id="modalDays">
+          <input type="hidden" name="transport" id="modalTransport">
+          <input type="hidden" name="price" id="modalPrice">
+
           <div class="mb-2">
             <label>Your Name</label>
             <input type="text" name="name" class="form-control" required>
@@ -184,53 +125,6 @@ $(document).ready(function(){
     </div>
   </div>
 </div>
-
-<script>
-$(document).ready(function(){
-
-    // Open booking modal when book button clicked
-    $(document).on("click", ".bookBtn", function(){
-        let packageId = $(this).data("id");
-        $("#modalPackageId").val(packageId);
-
-        let modal = new bootstrap.Modal(document.getElementById("bookingModal"));
-        modal.show();
-    });
-
-    // Submit booking form
-    $("#popupBookingForm").submit(function(e){
-        e.preventDefault();
-
-        let form = $(this);
-        $("#bookingResponse").html(""); // clear previous messages
-
-        $.ajax({
-            url: "api/book_package.php",
-            method: "POST",
-            data: form.serialize(),
-            dataType: "json",
-            success: function(response){
-                if(response.status === "success"){
-                    $("#bookingResponse").html("<span class='text-success'>" + response.message + "</span>");
-                    form[0].reset();
-                } else {
-                    $("#bookingResponse").html("<span class='text-danger'>" + response.message + "</span>");
-
-                    if(response.message === "Please login first."){
-                        setTimeout(function(){
-                            window.location.href = "login.php";
-                        }, 1500);
-                    }
-                }
-            },
-            error: function(){
-                $("#bookingResponse").html("<span class='text-danger'>Booking failed. Try again.</span>");
-            }
-        });
-    });
-
-});
-</script>
 
 </body>
 </html>
