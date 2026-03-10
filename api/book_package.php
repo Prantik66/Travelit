@@ -95,7 +95,7 @@ try {
     $mail->Host = 'smtp.gmail.com';
     $mail->SMTPAuth = true;
     $mail->Username = 'kesariyaprantik@gmail.com';
-    $mail->Password = 'mnqneczjqajvgrzs'; // app password
+    $mail->Password = 'GOOGLE IN APP PASSWORD'; // app password
     $mail->SMTPSecure = 'tls';
     $mail->Port = 587;
 
