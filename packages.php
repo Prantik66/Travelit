@@ -26,57 +26,137 @@
 <script>
 $(document).ready(function(){
 
+    // Read destination_id from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const destination_id = urlParams.get("destination_id");
+
     // Load packages
-    $.get("api/get_packages.php", function(data){
-        let packages = JSON.parse(data);
-        let html = "";
-        if(packages.length === 0){
-            html = "<p class='text-center'>No packages available.</p>";
-        } else {
+    $.ajax({
+        url: "api/get_packages.php",
+        method: "GET",
+        data: destination_id ? { destination_id: destination_id } : {},
+        dataType: "json",   // IMPORTANT
+
+        success: function(packages){
+
+            let html = "";
+
+            if(packages.length === 0){
+                html = "<p class='text-center'>No packages available.</p>";
+            } else {
+
             packages.forEach(pkg => {
+
+                let img = "";
+
+                if(pkg.destination === "Delhi"){
+                    img = "https://blog.lemontreehotels.com/wp-content/uploads/2025/02/Places-to-Visit-in-Delhi.jpg";
+                }
+                else if(pkg.destination === "Kashmir"){
+                    img = "https://media.thekashmirmonitor.net/wp-content/uploads/2023/11/gulmarg-4-_wide-e4eb7356bf7195fbaf7b00ec03326f7f09c47862-scaled.jpg";
+                }
+                else if(pkg.destination === "Darjeeling"){
+                    img = "https://static2.tripoto.com/media/filter/tst/img/2012133/Image/1662184373_tourism_darjeeling_india_1280x800.jpg.webp";
+                }
+                else{
+                    img = "assets/images/hero.jpg";
+                }
+
                 html += `
                 <div class="col-md-6 col-lg-4">
-                    <div class="card shadow-lg mb-4 p-3 text-center">
-                        <h3 class="text-warning">₹${pkg.price}</h3>
-                        <hr>
-                        <p><strong>Duration:</strong> ${pkg.days}</p>
-                        <p><strong>Transport:</strong> ${pkg.transport}</p>
-                        <button class="btn btn-primary w-100 bookBtn" data-id="${pkg.id}" data-destination="${pkg.destination}" data-days="${pkg.days}" data-transport="${pkg.transport}" data-price="${pkg.price}">
-                            Book Package
-                        </button>
+
+                    <div class="card shadow-lg mb-4 text-center">
+
+                        <img src="${img}" class="package-img">
+
+                        <div class="p-3">
+
+                            <h4>${pkg.destination}</h4>
+
+                            <h3 class="text-warning">₹${pkg.price}</h3>
+                            <hr>
+
+                            <p><strong>Duration:</strong> ${pkg.days}</p>
+                            <p><strong>Transport:</strong> ${pkg.transport}</p>
+
+                            <button 
+                                class="btn btn-primary w-100 bookBtn"
+                                data-id="${pkg.id}"
+                                data-destination="${pkg.destination}"
+                                data-days="${pkg.days}"
+                                data-transport="${pkg.transport}"
+                                data-price="${pkg.price}">
+                                Book Package
+                            </button>
+
+                        </div>
+
                     </div>
+
                 </div>`;
             });
+
+            }
+
+            $("#packageList").html(html);
+        },
+
+        error:function(){
+            $("#packageList").html("<p class='text-danger text-center'>Server error loading packages</p>");
         }
-        $("#packageList").html(html);
     });
 
     // Open booking modal
     $(document).on("click", ".bookBtn", function(){
+
         const btn = $(this);
+
         $("#modalPackageId").val(btn.data("id"));
         $("#modalDestination").val(btn.data("destination"));
         $("#modalDays").val(btn.data("days"));
         $("#modalTransport").val(btn.data("transport"));
         $("#modalPrice").val(btn.data("price"));
+
+        // Show info to user
+        $("#selectedPackageInfo").html(
+            `<b>${btn.data("destination")}</b> | ${btn.data("days")} | ${btn.data("transport")} | ₹${btn.data("price")}`
+        );
+
         new bootstrap.Modal(document.getElementById("bookingModal")).show();
+
     });
+
 
     // Submit booking
     $("#popupBookingForm").submit(function(e){
+
         e.preventDefault();
+
         $.ajax({
             url: "api/send_booking_email.php",
             method: "POST",
             data: $(this).serialize(),
+
             success: function(res){
-                $("#bookingResponse").html("<span class='text-success'>Booking request sent! Admin will contact you soon.</span>");
+
+                $("#bookingResponse").html(
+                    "<span class='text-success'>Booking request sent! Admin will contact you soon.</span>"
+                );
+
                 $("#popupBookingForm")[0].reset();
+
             },
-            error: function(){
-                $("#bookingResponse").html("<span class='text-danger'>Failed to send booking request.</span>");
+
+            error:function(){
+
+                $("#bookingResponse").html(
+                    "<span class='text-danger'>Failed to send booking request.</span>"
+                );
+
             }
+
         });
+
     });
 
 });
@@ -91,6 +171,7 @@ $(document).ready(function(){
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
+        <div id="selectedPackageInfo" class="mb-3 text-center fw-bold"></div>
         <form id="popupBookingForm">
           <input type="hidden" name="package_id" id="modalPackageId">
           <input type="hidden" name="destination" id="modalDestination">

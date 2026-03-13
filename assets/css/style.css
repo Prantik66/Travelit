@@ -4,7 +4,7 @@ body {
     font-family: 'Poppins', sans-serif;
 }
 
-/* ===== NAVBAR ===== */
+/* NAVBAR */
 .custom-navbar {
     background: #000;
     padding: 20px 0;
@@ -34,7 +34,7 @@ body {
     color: #c5a47e;
 }
 
-/* ===== HERO ===== */
+/* HERO */
 .hero {
     height: 90vh;
     background: url('../images/hero.jpg') center/cover no-repeat;
@@ -52,7 +52,7 @@ body {
     color: #ccc;
 }
 
-/* ===== BUTTON ===== */
+/* BUTTON */
 .btn-luxury {
     background: #c5a47e;
     color: #000;
@@ -67,7 +67,7 @@ body {
     color: #000;
 }
 
-/* ===== DESTINATION CARD ===== */
+/* DESTINATION CARD */
 .destination-card {
     position: relative;
     overflow: hidden;
@@ -103,12 +103,12 @@ body {
     color: #ddd;
 }
 
-/* ===== SECTION TITLE ===== */
+/* SECTION TITLE */
 .section-title {
     color: #c5a47e;
 }
 
-/* ===== FOOTER ===== */
+/* FOOTER */
 .footer {
     background: #0a0a0a;
     padding: 60px 0;
@@ -223,7 +223,7 @@ html {
     scroll-behavior: smooth;
 }
 
-/* ===== CHATBOT ===== */
+/* CHATBOT */
 #chatbot {
     position: fixed;
     bottom: 30px;
@@ -308,3 +308,56 @@ html {
 }
 
 #chatbot-form button:hover { background: #b89365; }
+
+/*  PACKAGES PAGE CARD */
+
+#packageList .card{
+    background:#111;
+    border:1px solid #2a2a2a;
+    border-radius:16px;
+    color:#fff;
+    transition:0.3s;
+    box-shadow:0 20px 40px rgba(0,0,0,0.6);
+}
+
+#packageList .card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 30px 60px rgba(0,0,0,0.8);
+}
+
+#packageList .card h4{
+    color:#c5a47e;
+    font-weight:600;
+}
+
+#packageList .card h3{
+    color:#c5a47e !important;
+    font-weight:700;
+}
+
+#packageList .card p{
+    color:#ccc;
+}
+
+#packageList .card hr{
+    border-color:#333;
+}
+
+#packageList .card .btn-primary{
+    background:#c5a47e;
+    border:none;
+    color:#000;
+    font-weight:600;
+}
+
+#packageList .card .btn-primary:hover{
+    background:#b89365;
+}
+
+/* Package card image */
+.package-img{
+    width:100%;
+    height:220px;
+    object-fit:cover;
+    display:block;
+}

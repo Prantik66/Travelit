@@ -15,9 +15,15 @@ if(isset($_POST['add'])){
     $days = $_POST['days'];
     $transport = $_POST['transport'];
     $price = $_POST['price'];
-
-    $stmt = $conn->prepare("INSERT INTO packages (destination_id, days, transport, price) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("isss", $destination_id, $days, $transport, $price);
+    $featured = isset($_POST['featured']) ? 1 : 0;
+    
+    if($featured == 1){
+    $stmt = $conn->prepare("UPDATE packages SET featured=0 WHERE destination_id=?");
+    $stmt->bind_param("i", $destination_id);
+    $stmt->execute();
+    }
+    $stmt = $conn->prepare("INSERT INTO packages (destination_id, days, transport, price, featured) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("isssi", $destination_id, $days, $transport, $price, $featured);
     $stmt->execute();
     header("Location: packages.php");
     exit();
@@ -26,16 +32,21 @@ if(isset($_POST['add'])){
 // Delete package
 if(isset($_GET['delete'])){
     $id = $_GET['delete'];
-    $conn->query("DELETE FROM packages WHERE id=$id");
+    $stmt = $conn->prepare("DELETE FROM packages WHERE id=?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
     header("Location: packages.php");
     exit();
 }
 
 // Fetch packages with destination names
-$packages = $conn->query("SELECT p.id, p.days, p.transport, p.price, d.name AS destination_name
-                          FROM packages p
-                          JOIN destinations d ON p.destination_id = d.id
-                          ORDER BY p.id DESC");
+$packages = $conn->query("
+SELECT p.id, p.days, p.transport, p.price, p.featured,
+d.name AS destination_name
+FROM packages p
+JOIN destinations d ON p.destination_id = d.id
+ORDER BY p.id DESC
+");
 ?>
 
 <!DOCTYPE html>
@@ -66,6 +77,11 @@ $packages = $conn->query("SELECT p.id, p.days, p.transport, p.price, d.name AS d
         <div class="col-md-2">
             <input type="text" name="price" class="form-control" placeholder="Price" required>
         </div>
+        <div class="col-md-1">
+        <label class="form-check-label">
+            <input type="checkbox" name="featured" value="1"> Featured
+        </label>
+        </div>
         <div class="col-md-2">
             <button class="btn btn-success w-100" name="add">Add Package</button>
         </div>
@@ -79,6 +95,7 @@ $packages = $conn->query("SELECT p.id, p.days, p.transport, p.price, d.name AS d
                 <th>Days</th>
                 <th>Transport</th>
                 <th>Price</th>
+                <th>Featured</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -90,6 +107,7 @@ $packages = $conn->query("SELECT p.id, p.days, p.transport, p.price, d.name AS d
                 <td><?= $row['days'] ?></td>
                 <td><?= $row['transport'] ?></td>
                 <td><?= $row['price'] ?></td>
+                <td><?= $row['featured'] ? 'Featured' : '-' ?></td>
                 <td>
                     <a href="?delete=<?= $row['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</a>
                 </td>

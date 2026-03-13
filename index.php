@@ -20,7 +20,7 @@
 </head>
 <body>
 
-<!-- ===== NAVBAR ===== -->
+<!-- NAVBAR -->
 <header class="custom-navbar">
     <div class="container d-flex justify-content-between align-items-center">
         <div class="logo">Travelit</div>
@@ -57,7 +57,7 @@
 </header>
 
 
-<!-- ===== HERO SECTION ===== -->
+<!-- HERO SECTION -->
 <div class="hero">
     <div class="text-center">
         <h1 class="display-4">Experience India With Travelit</h1>
@@ -72,11 +72,11 @@
 
             <div class="col-md-3">
                 <label>Destination</label>
-                <select class="form-control">
+                <select name="destination_id" class="form-control">
                     <option>Select Destination</option>
-                    <option>Delhi</option>
-                    <option>Kashmir</option>
-                    <option>Darjeeling</option>
+                    <option value="1">Kashmir</option>
+                    <option value="2">Darjeeling</option>
+                    <option value="3">Delhi</option>
                 </select>
             </div>
 
@@ -102,60 +102,24 @@
 <div class="container my-5">
     <h2 class="text-center mb-4 section-title">Featured Packages</h2>
 
-    <div id="featuredCarousel" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner">
+<div id="featuredCarousel" class="carousel slide" data-bs-ride="carousel">
 
-            <!-- DELHI -->
-            <div class="carousel-item active">
-                <div class="featured-card text-center">
-                    <img src="assets/images/delhi.jpg" class="img-fluid">
-                    <div class="featured-info">
-                        <h3>Delhi Heritage Experience</h3>
-                        <p>3 Nights • Guided City Tours • Luxury Stay</p>
-                        <a href="packages.php?destination_id=1" class="btn btn-luxury">View Package</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- KASHMIR -->
-            <div class="carousel-item">
-                <div class="featured-card text-center">
-                    <img src="assets/images/kashmir.jpg" class="img-fluid">
-                    <div class="featured-info">
-                        <h3>Kashmir Scenic Retreat</h3>
-                        <p>4 Nights • Houseboat Stay • Mountain Views</p>
-                        <a href="packages.php?destination_id=2" class="btn btn-luxury">View Package</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- DARJEELING -->
-            <div class="carousel-item">
-                <div class="featured-card text-center">
-                    <img src="assets/images/darjeeling.jpg" class="img-fluid">
-                    <div class="featured-info">
-                        <h3>Darjeeling Tea Hills Escape</h3>
-                        <p>3 Nights • Hill View Resort • Nature Tours</p>
-                        <a href="packages.php?destination_id=3" class="btn btn-luxury">View Package</a>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Controls -->
-        <button class="carousel-control-prev" type="button" data-bs-target="#featuredCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon"></span>
-        </button>
-
-        <button class="carousel-control-next" type="button" data-bs-target="#featuredCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon"></span>
-        </button>
-
+    <div class="carousel-inner" id="featuredPackages">
+        <!-- JS will insert featured packages here -->
     </div>
+
+    <!-- Controls -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#featuredCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+    </button>
+
+    <button class="carousel-control-next" type="button" data-bs-target="#featuredCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+    </button>
+
 </div>
 
-<!-- ===== ABOUT ===== -->
+<!-- ABOUT -->
 <div class="container my-5" id="about">
 
 <h2 class="text-center mb-4 section-title">About Travelit</h2>
@@ -168,14 +132,14 @@ handpicked experiences, and seamless booking for unforgettable journeys.
 
 </div>
 
-<!-- ===== DESTINATIONS ===== -->
+<!-- DESTINATIONS -->
 <div class="container my-5" id="destinations">
     <h2 class="text-center mb-5 section-title">Explore Destinations</h2>
     <div class="row" id="destinationList"></div>
 </div>
 
 
-<!-- ===== AJAX ===== -->
+<!-- AJAX -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
@@ -209,7 +173,7 @@ $(document).ready(function(){
 </script>
 
 
-<!-- ===== FOOTER ===== -->
+<!-- FOOTER -->
 <footer class="footer" id="contact">
     <div class="container">
         <div class="row text-start">
@@ -299,9 +263,9 @@ $(document).ready(function(){
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
+<!-- Date Selector -->
 <script>
 flatpickr("#dateRange", {
-    mode: "range",
     minDate: "today",
     dateFormat: "Y-m-d"
 });
@@ -415,7 +379,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
-<!-- ===== CHATBOT WIDGET ===== -->
+<!-- CHATBOT WIDGET -->
 <div id="chatbot">
     <div id="chatbot-button">💬</div>
     <div id="chatbot-window">
@@ -464,7 +428,7 @@ $(document).ready(function(){
         chatbotInput.val("");
         chatbotMessages.scrollTop(chatbotMessages[0].scrollHeight);
 
-        // =====Bot Logic =====
+        // Bot Logic 
         setTimeout(function(){
 
             msg = msg.toLowerCase();
@@ -515,8 +479,50 @@ $(document).ready(function(){
 });
 </script>
 
-</body>
-</html>
+<script>
+$(document).ready(function(){
+
+    $.ajax({
+        url: "api/get_featured_packages.php",
+        method: "GET",
+        dataType: "json",
+
+        success:function(packages){
+
+            let html = "";
+
+            packages.forEach((pkg, index) => {
+
+                html += `
+                <div class="carousel-item ${index === 0 ? "active" : ""}">
+                    <div class="featured-card text-center">
+
+                        <img src="assets/images/${pkg.destination.toLowerCase()}.jpg" class="img-fluid">
+
+                        <div class="featured-info">
+                            <h3>${pkg.destination} Package</h3>
+
+                            <p>${pkg.days} • ${pkg.transport}</p>
+
+                            <a href="packages.php?destination_id=${pkg.destination_id}" 
+                               class="btn btn-luxury">
+                               View Package
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+                `;
+            });
+
+            $("#featuredPackages").html(html);
+
+        }
+
+    });
+
+});
+</script>
 
 </body>
 </html>
