@@ -1,7 +1,8 @@
 <?php
 session_start();
-if(!isset($_SESSION['admin_logged_in'])){
-    header("Location: login.php");
+
+if(!isset($_SESSION['user_role']) || $_SESSION['user_role'] != 'admin'){
+    header("Location: ../index.php");
     exit();
 }
 ?>

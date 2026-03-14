@@ -12,7 +12,7 @@
 
 <style>
 
-/* Premium background */
+/* CSS for Background */
 body{
     min-height:100vh;
     background:

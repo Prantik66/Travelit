@@ -35,22 +35,26 @@
         </nav>
 
         <div>
-            <?php if(isset($_SESSION['user_id'])): ?>
+        <?php if(isset($_SESSION['user_id'])): ?>
 
-                <span class="text-light me-3">
-                    Welcome, <?php echo $_SESSION['user_name']; ?>
-                </span>
+            <span class="text-light me-3">
+                Welcome, <?php echo $_SESSION['user_name']; ?>
+            </span>
 
-                <a href="logout.php" class="btn btn-danger me-2">Logout</a>
+            <a href="logout.php" class="btn btn-danger me-2">Logout</a>
 
-            <?php else: ?>
-
-                <a href="login.php" class="btn btn-outline-light me-2">Sign In</a>
-                <a href="register.php" class="btn btn-light me-2">Register</a>
-
+            <?php if(isset($_SESSION['user_role']) && $_SESSION['user_role'] === "admin"): ?>
+                <a href="admin/dashboard.php" class="btn btn-warning me-2">Admin Panel</a>
             <?php endif; ?>
 
-            <a href="#searchSection" class="btn btn-luxury">Book Now</a>
+        <?php else: ?>
+
+            <a href="login.php" class="btn btn-outline-light me-2">Sign In</a>
+            <a href="register.php" class="btn btn-light me-2">Register</a>
+
+        <?php endif; ?>
+
+        <a href="#searchSection" class="btn btn-luxury">Book Now</a>
         </div>
 
     </div>
