@@ -1,26 +1,21 @@
 <?php session_start(); ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Travelit</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Travelit — Discover curated travel packages across India. Book Kashmir, Darjeeling, Delhi and more.">
+    <title>Travelit — Experience India</title>
 
-    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
-
-    <!-- Custom CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
-
-    <!--Flatpicker for date-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 
-<!-- NAVBAR -->
 <header class="custom-navbar">
     <div class="container d-flex justify-content-between align-items-center">
         <div class="logo">Travelit</div>
@@ -34,246 +29,187 @@
             </ul>
         </nav>
 
-        <div>
-        <?php if(isset($_SESSION['user_id'])): ?>
-
-            <span class="text-light me-3">
-                Welcome, <?php echo $_SESSION['user_name']; ?>
-            </span>
-
-            <a href="logout.php" class="btn btn-danger me-2">Logout</a>
-
-            <?php if(isset($_SESSION['user_role']) && $_SESSION['user_role'] === "admin"): ?>
-                <a href="admin/dashboard.php" class="btn btn-warning me-2">Admin Panel</a>
+        <div class="d-flex align-items-center gap-2 desktop-auth">
+            <?php if(isset($_SESSION['user_id'])): ?>
+                <span class="text-light me-2" style="font-size:0.85rem;">
+                    Hi, <?php echo htmlspecialchars($_SESSION['user_name']); ?>
+                </span>
+                <a href="logout.php" class="btn btn-sm btn-outline-secondary text-light">Logout</a>
+                <?php if(isset($_SESSION['user_role']) && $_SESSION['user_role'] === "admin"): ?>
+                    <a href="admin/dashboard.php" class="btn btn-sm" style="background:#c5a47e;color:#000;font-weight:600;">Admin</a>
+                <?php endif; ?>
+            <?php else: ?>
+                <a href="login.php" class="btn btn-sm btn-outline-light">Sign In</a>
+                <a href="register.php" class="btn btn-sm btn-luxury">Register</a>
             <?php endif; ?>
-
-        <?php else: ?>
-
-            <a href="login.php" class="btn btn-outline-light me-2">Sign In</a>
-            <a href="register.php" class="btn btn-light me-2">Register</a>
-
-        <?php endif; ?>
-
-        <a href="#searchSection" class="btn btn-luxury">Book Now</a>
+            <a href="#searchSection" class="btn btn-luxury btn-sm ms-1">Book Now</a>
         </div>
 
+        <button class="hamburger" id="hamburgerBtn" aria-label="Toggle navigation">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <ul>
+            <li><a href="#destinations">Destinations</a></li>
+            <li><a href="packages.php">Experiences</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div class="auth-links">
+            <?php if(isset($_SESSION['user_id'])): ?>
+                <a href="logout.php" class="btn btn-sm btn-outline-secondary text-light">Logout</a>
+                <?php if(isset($_SESSION['user_role']) && $_SESSION['user_role'] === "admin"): ?>
+                    <a href="admin/dashboard.php" class="btn btn-sm btn-luxury">Admin</a>
+                <?php endif; ?>
+            <?php else: ?>
+                <a href="login.php" class="btn btn-sm btn-outline-light">Sign In</a>
+                <a href="register.php" class="btn btn-sm btn-luxury">Register</a>
+            <?php endif; ?>
+        </div>
     </div>
 </header>
 
 
-<!-- HERO SECTION -->
 <div class="hero">
-    <div class="text-center">
-        <h1 class="display-4">Experience India With Travelit</h1>
-        <p>Discover curated destinations across India</p>
+    <div class="hero-content">
+        <h1>Experience India<br>With Travelit</h1>
+        <p>Curated destinations. Unforgettable journeys.</p>
+        <a href="#searchSection" class="btn btn-luxury">Explore Packages &nbsp;<i class="fa fa-arrow-down"></i></a>
     </div>
 </div>
 
-<!-- SEARCH BAR -->
+
 <div class="search-section" id="searchSection">
     <div class="container">
         <form action="packages.php" method="GET" class="search-box row g-3 align-items-end">
-
-            <div class="col-md-3">
+            <div class="col-md-3 col-6">
                 <label>Destination</label>
                 <select name="destination_id" class="form-control">
-                    <option>Select Destination</option>
+                    <option value="">All Destinations</option>
                     <option value="1">Kashmir</option>
                     <option value="2">Darjeeling</option>
                     <option value="3">Delhi</option>
                 </select>
             </div>
 
-            <div class="col-md-4">
-                <label>Travel Dates</label>
-                <input type="text" id="dateRange" class="form-control" placeholder="Select your travel dates">
+            <div class="col-md-4 col-6">
+                <label>Travel Date</label>
+                <input type="text" id="dateRange" name="travel_date" class="form-control" placeholder="Pick a date">
             </div>
 
-            <div class="col-md-2">
+            <div class="col-md-2 col-6">
                 <label>Guests</label>
-                <input type="number" class="form-control" placeholder="2">
+                <input type="number" name="guests" class="form-control" placeholder="2" min="1">
             </div>
 
-            <div class="col-md-3">
+            <div class="col-md-3 col-6">
                 <button type="submit" class="btn btn-luxury w-100">Search</button>
             </div>
-            </form>        
+        </form>
+    </div>
+</div>
+
+
+<div class="container my-5" id="featured">
+    <h2 class="text-center mb-4 section-title">Featured Packages</h2>
+
+    <div id="featuredCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner" id="featuredPackages"></div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#featuredCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#featuredCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+    </div>
+</div>
+
+
+<div class="container my-5" id="about">
+    <div class="about-section">
+        <h2 class="section-title mb-3">About Travelit</h2>
+        <p>
+            Travelit is a premium travel platform built to help explorers discover the most beautiful destinations
+            across India. We curate handpicked experiences, luxury travel packages, and seamless booking for
+            journeys you'll remember for a lifetime.
+        </p>
+        <div class="stats-row">
+            <div class="stat-item">
+                <div class="number">500+</div>
+                <div class="label">Happy Travelers</div>
+            </div>
+            <div class="stat-item">
+                <div class="number">12+</div>
+                <div class="label">Destinations</div>
+            </div>
+            <div class="stat-item">
+                <div class="number">98%</div>
+                <div class="label">Satisfaction Rate</div>
+            </div>
+            <div class="stat-item">
+                <div class="number">5★</div>
+                <div class="label">Avg. Rating</div>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- FEATURED PACKAGES -->
-<div class="container my-5">
-    <h2 class="text-center mb-4 section-title">Featured Packages</h2>
 
-<div id="featuredCarousel" class="carousel slide" data-bs-ride="carousel">
-
-    <div class="carousel-inner" id="featuredPackages">
-        <!-- JS will insert featured packages here -->
-    </div>
-
-    <!-- Controls -->
-    <button class="carousel-control-prev" type="button" data-bs-target="#featuredCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon"></span>
-    </button>
-
-    <button class="carousel-control-next" type="button" data-bs-target="#featuredCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon"></span>
-    </button>
-
-</div>
-
-<!-- ABOUT -->
-<div class="container my-5" id="about">
-
-<h2 class="text-center mb-4 section-title">About Travelit</h2>
-
-<p class="text-center text-light">
-Travelit is a premium travel platform designed to help explorers discover the
-most beautiful destinations across India. We curate luxury travel packages,
-handpicked experiences, and seamless booking for unforgettable journeys.
-</p>
-
-</div>
-
-<!-- DESTINATIONS -->
 <div class="container my-5" id="destinations">
     <h2 class="text-center mb-5 section-title">Explore Destinations</h2>
     <div class="row" id="destinationList"></div>
 </div>
 
 
-<!-- AJAX -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<script>
-$(document).ready(function(){
-    $.ajax({
-        url: "api/get_destinations.php",
-        method: "GET",
-        success: function(data){
-            let destinations = JSON.parse(data);
-            let html = "";
-
-            destinations.forEach(function(dest){
-                html += `
-                    <div class="col-md-4 mb-4">
-                        <div class="destination-card">
-                            <img src="assets/images/${dest.image}" class="img-fluid">
-                            <div class="overlay">
-                                <h3>${dest.name}</h3>
-                                <p>${dest.description}</p>
-                                <a href="packages.php?destination_id=${dest.id}" class="btn btn-luxury mt-2">Explore</a>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-
-            $("#destinationList").html(html);
-        }
-    });
-});
-</script>
-
-
-<!-- FOOTER -->
 <footer class="footer" id="contact">
     <div class="container">
-        <div class="row text-start">
-
+        <div class="row">
             <div class="col-md-4 mb-4">
                 <h4 class="footer-title">Travelit</h4>
-                <p>Curated travel experiences across India.</p>
+                <p>Curated travel experiences across India. Luxury, comfort, and adventure await.</p>
             </div>
 
             <div class="col-md-2 mb-4">
                 <h6 class="footer-title">Company</h6>
-                <p>About</p>
-                <p>Careers</p>
-                <p>Press</p>
+                <p><a href="#about">About Us</a></p>
+                <p><a href="#">Careers</a></p>
+                <p><a href="#">Press</a></p>
             </div>
 
             <div class="col-md-2 mb-4">
                 <h6 class="footer-title">Support</h6>
-                <p>Contact</p>
-                <p>FAQs</p>
-                <p>Privacy</p>
+                <p><a href="#contact">Contact</a></p>
+                <p><a href="#">FAQs</a></p>
+                <p><a href="#">Privacy Policy</a></p>
             </div>
 
             <div class="col-md-4 mb-4">
                 <h6 class="footer-title">Quick Feedback</h6>
-                
-                <!-- Feedback Message -->
-                <textarea id="footerFeedback" class="form-control mb-2" rows="2" placeholder="Your feedback…"></textarea>
-                
-                <!-- Rating Selector -->
-                <select id="footerFeedbackRating" class="form-control mb-2">
+                <textarea id="footerFeedback" class="form-control mb-2" rows="2"
+                    placeholder="Share your experience..." style="background:#111;border:1px solid #222;color:#fff;border-radius:8px;"></textarea>
+                <select id="footerFeedbackRating" class="form-control mb-2"
+                    style="background:#111;border:1px solid #222;color:#fff;border-radius:8px;">
                     <option value="">Rate us (optional)</option>
-                    <option value="1">1 - Poor</option>
-                    <option value="2">2 - Fair</option>
-                    <option value="3">3 - Good</option>
-                    <option value="4">4 - Very Good</option>
-                    <option value="5">5 - Excellent</option>
+                    <option value="1">1 — Poor</option>
+                    <option value="2">2 — Fair</option>
+                    <option value="3">3 — Good</option>
+                    <option value="4">4 — Very Good</option>
+                    <option value="5">5 — Excellent</option>
                 </select>
-                
                 <button id="submitFeedback" class="btn btn-luxury w-100">Submit Feedback</button>
-                <div id="footerFeedbackMsg" class="mt-2"></div>
+                <div id="footerFeedbackMsg" class="mt-2 small"></div>
             </div>
-
-            <script>
-            $(document).ready(function(){
-
-                $("#submitFeedback").click(function(){
-
-                    let feedback = $("#footerFeedback").val().trim();
-                    let rating = $("#footerFeedbackRating").val();
-
-                    if(feedback === ""){
-                        $("#footerFeedbackMsg").html("<span class='text-danger'>Please enter your feedback.</span>");
-                        return;
-                    }
-
-                    $.ajax({
-                        url: "api/submit_feedback.php",
-                        method: "POST",
-                        data: { 
-                            message: feedback,
-                            rating: rating 
-                        },
-                        success: function(res){
-                            $("#footerFeedbackMsg").html("<span class='text-success'>Thank you for your feedback!</span>");
-                            $("#footerFeedback").val("");
-                            $("#footerFeedbackRating").val(""); // reset rating
-                        },
-                        error: function(){
-                            $("#footerFeedbackMsg").html("<span class='text-danger'>Oops! Something went wrong.</span>");
-                        }
-                    });
-
-                });
-
-            });
-            </script>
-
         </div>
 
-        <hr style="border-color: #333;">
-        <p class="text-center small">© 2026 Travelit. All Rights Reserved.</p>
+        <hr style="border-color:#1a1a1a;">
+        <p class="text-center small" style="color:#555;">© 2026 Travelit. All Rights Reserved.</p>
     </div>
 </footer>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
-<!-- Date Selector -->
-<script>
-flatpickr("#dateRange", {
-    minDate: "today",
-    dateFormat: "Y-m-d"
-});
-</script>
 
 <!-- BOOKING MODAL -->
 <div class="modal fade" id="bookingModal" tabindex="-1">
@@ -330,6 +266,29 @@ flatpickr("#dateRange", {
   </div>
 </div>
 
+<div id="chatbot">
+    <div id="chatbot-button" title="Chat with us">💬</div>
+    <div id="chatbot-window">
+        <div id="chatbot-header">
+            <span>Travelit Assistant</span>
+            <span id="chatbot-close">✖</span>
+        </div>
+        <div id="chatbot-messages">
+            <div class="message bot">Hi! I'm Travelit Bot. Ask me about destinations or packages. ✈️</div>
+        </div>
+        <form id="chatbot-form">
+            <input type="text" id="chatbot-input" placeholder="Ask something..." autocomplete="off" required>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+</div>
+
+<!-- JAVASCRIPT SECTION -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<!-- BOOKING -->
 <script>
 $("#popupBookingForm").submit(function(e){
 
@@ -383,25 +342,91 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
-<!-- CHATBOT WIDGET -->
-<div id="chatbot">
-    <div id="chatbot-button">💬</div>
-    <div id="chatbot-window">
-        <div id="chatbot-header">
-            <span>Travelit Assistant</span>
-            <span id="chatbot-close">✖</span>
-        </div>
-        <div id="chatbot-messages">
-            <div class="message bot">Hi! I’m Travelit Bot. Ask me about our destinations or packages.</div>
-        </div>
-        <form id="chatbot-form">
-            <input type="text" id="chatbot-input" placeholder="Type a message..." autocomplete="off" required>
-            <button type="submit">Send</button>
-        </form>
-    </div>
-</div>
 <script>
-$(document).ready(function(){
+flatpickr("#dateRange", {
+    minDate: "today",
+    dateFormat: "Y-m-d"
+});
+
+document.getElementById("hamburgerBtn").addEventListener("click", function() {
+    document.getElementById("mobileMenu").classList.toggle("open");
+});
+
+$(document).ready(function() {
+    $.ajax({
+        url: "api/get_destinations.php",
+        method: "GET",
+        success: function(data) {
+            let destinations = JSON.parse(data);
+            let html = "";
+            destinations.forEach(function(dest) {
+                html += `
+                    <div class="col-md-4 mb-4">
+                        <div class="destination-card">
+                            <img src="assets/images/${dest.image}" class="img-fluid" alt="${dest.name}">
+                            <div class="overlay">
+                                <h3>${dest.name}</h3>
+                                <p>${dest.description}</p>
+                                <a href="packages.php?destination_id=${dest.id}" class="btn btn-luxury mt-1">Explore</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            $("#destinationList").html(html);
+        }
+    });
+
+    $.ajax({
+        url: "api/get_featured_packages.php",
+        method: "GET",
+        dataType: "json",
+        success: function(packages) {
+            let html = "";
+            packages.forEach(function(pkg, index) {
+                html += `
+                    <div class="carousel-item ${index === 0 ? "active" : ""}">
+                        <div class="featured-card text-center">
+                            <img src="assets/images/${pkg.destination.toLowerCase()}.jpg"
+                                 class="img-fluid" alt="${pkg.destination}">
+                            <div class="featured-info">
+                                <h3>${pkg.destination} Package</h3>
+                                <p>${pkg.days} &bull; ${pkg.transport}</p>
+                                <a href="packages.php?destination_id=${pkg.destination_id}" class="btn btn-luxury">
+                                    View Package
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            $("#featuredPackages").html(html);
+        }
+    });
+
+    $("#submitFeedback").click(function() {
+        let feedback = $("#footerFeedback").val().trim();
+        let rating = $("#footerFeedbackRating").val();
+
+        if(feedback === "") {
+            $("#footerFeedbackMsg").html("<span class='text-danger'>Please enter your feedback first.</span>");
+            return;
+        }
+
+        $.ajax({
+            url: "api/submit_feedback.php",
+            method: "POST",
+            data: { message: feedback, rating: rating },
+            success: function() {
+                $("#footerFeedbackMsg").html("<span class='text-success'>Thank you for your feedback! 🙌</span>");
+                $("#footerFeedback").val("");
+                $("#footerFeedbackRating").val("");
+            },
+            error: function() {
+                $("#footerFeedbackMsg").html("<span class='text-danger'>Oops! Something went wrong.</span>");
+            }
+        });
+    });
 
     const chatbotButton = $("#chatbot-button");
     const chatbotWindow = $("#chatbot-window");
@@ -410,121 +435,54 @@ $(document).ready(function(){
     const chatbotForm = $("#chatbot-form");
     const chatbotInput = $("#chatbot-input");
 
-    // Toggle chatbot
     chatbotButton.click(() => chatbotWindow.toggle());
     chatbotClose.click(() => chatbotWindow.hide());
 
-    // Package data (demo, sync with your database later if needed)
     const packages = [
         {name: "Delhi Heritage Experience", destination: "Delhi", price: "₹15,000"},
         {name: "Kashmir Scenic Retreat", destination: "Kashmir", price: "₹10,000"},
         {name: "Darjeeling Tea Hills Escape", destination: "Darjeeling", price: "₹8,000"}
     ];
 
-    // Handle messages
-    chatbotForm.submit(function(e){
+    chatbotForm.submit(function(e) {
         e.preventDefault();
         let msg = chatbotInput.val().trim();
         if(!msg) return;
 
-        // Show user message
         chatbotMessages.append(`<div class="message user">${msg}</div>`);
         chatbotInput.val("");
         chatbotMessages.scrollTop(chatbotMessages[0].scrollHeight);
 
-        // Bot Logic 
-        setTimeout(function(){
-
-            msg = msg.toLowerCase();
-
+        setTimeout(function() {
+            let lower = msg.toLowerCase();
             let reply = "";
 
-            // Greeting responses
             const greetings = ["hi", "hello", "hey", "good morning", "good evening"];
-            if (greetings.some(g => msg.includes(g))) {
-                reply = "Hello! 👋 I'm Travelit Bot. I can help you explore our travel packages. You can ask about destinations, packages, or trips!";
-            }
-            // User asking about packages or trips
-            else if (msg.includes("packages") || msg.includes("trip") || msg.includes("travel") || msg.includes("tour") ||  msg.includes("go")) {
-                reply = "Here are some of our popular packages:<br>" + 
-                        packages.map(p => `<b>${p.name}</b> - ${p.destination} - ${p.price}`).join("<br>") +
-                        "<br>Type a destination name if you want more details!";
-            }
-            // User mentions a specific destination
-            else if(packages.some(p => msg.includes(p.destination.toLowerCase()))) {
-                const matched = packages.filter(p => msg.includes(p.destination.toLowerCase()));
-                reply = matched.map(p => `<b>${p.name}</b> - ${p.price}<br>For more info, you can book directly!`).join("<br><br>");
-            }
-            // User expressing dissatisfaction
-            else if(msg.includes("bad") || msg.includes("not happy") || msg.includes("sad") || msg.includes("angry") || msg.includes("disappoint")) {
-                reply = "Oh no 😔! We’re really sorry you feel that way. Please <a href='feedback.php' style='color:#c5a47e;'>submit your feedback</a> so we can improve.";
-            }
-            // Asking about recommendations
-            else if(msg.includes("recommend") || msg.includes("suggest")) {
-                reply = "I recommend checking out these packages:<br>" + 
-                        packages.map(p => `<b>${p.name}</b> - ${p.destination} - ${p.price}`).join("<br>") +
-                        "<br>Which one catches your interest?";
-            }
-            // Saying thanks
-            else if(msg.includes("thanks") || msg.includes("thank you")) {
-                reply = "You’re welcome! 😊 If you need more help, just ask me about packages or destinations.";
-            }
-            // Fallback for unknown messages
-            else {
-                reply = "Sorry, I didn't quite get that. You can ask me about destinations, packages, or type a destination name to see details!";
+            if(greetings.some(g => lower.includes(g))) {
+                reply = "Hello! 👋 I'm Travelit Bot. I can help you explore packages. Ask about destinations, prices, or trips!";
+            } else if(lower.includes("packages") || lower.includes("trip") || lower.includes("travel") || lower.includes("tour")) {
+                reply = "Here are some popular packages:<br>" +
+                        packages.map(p => `<b>${p.name}</b> — ${p.destination} — ${p.price}`).join("<br>") +
+                        "<br><br>Which destination interests you?";
+            } else if(packages.some(p => lower.includes(p.destination.toLowerCase()))) {
+                const matched = packages.filter(p => lower.includes(p.destination.toLowerCase()));
+                reply = matched.map(p => `<b>${p.name}</b> — ${p.price}<br>Visit our <a href="packages.php" style="color:#c5a47e;">packages page</a> to book!`).join("<br><br>");
+            } else if(lower.includes("recommend") || lower.includes("suggest") || lower.includes("best")) {
+                reply = "I'd recommend:<br>" +
+                        packages.map(p => `<b>${p.name}</b> — ${p.destination} — ${p.price}`).join("<br>") +
+                        "<br><br>Which one catches your eye?";
+            } else if(lower.includes("thanks") || lower.includes("thank you")) {
+                reply = "You're welcome! 😊 Happy travels with Travelit!";
+            } else if(lower.includes("book") || lower.includes("pay") || lower.includes("price")) {
+                reply = "You can book any package on our <a href='packages.php' style='color:#c5a47e;'>Packages page</a>. Just click 'Book Package' to get started!";
+            } else {
+                reply = "I didn't quite catch that. Try asking about destinations, packages, or booking!";
             }
 
             chatbotMessages.append(`<div class="message bot">${reply}</div>`);
             chatbotMessages.scrollTop(chatbotMessages[0].scrollHeight);
-
         }, 800);
     });
-
-});
-</script>
-
-<script>
-$(document).ready(function(){
-
-    $.ajax({
-        url: "api/get_featured_packages.php",
-        method: "GET",
-        dataType: "json",
-
-        success:function(packages){
-
-            let html = "";
-
-            packages.forEach((pkg, index) => {
-
-                html += `
-                <div class="carousel-item ${index === 0 ? "active" : ""}">
-                    <div class="featured-card text-center">
-
-                        <img src="assets/images/${pkg.destination.toLowerCase()}.jpg" class="img-fluid">
-
-                        <div class="featured-info">
-                            <h3>${pkg.destination} Package</h3>
-
-                            <p>${pkg.days} • ${pkg.transport}</p>
-
-                            <a href="packages.php?destination_id=${pkg.destination_id}" 
-                               class="btn btn-luxury">
-                               View Package
-                            </a>
-                        </div>
-
-                    </div>
-                </div>
-                `;
-            });
-
-            $("#featuredPackages").html(html);
-
-        }
-
-    });
-
 });
 </script>
 
