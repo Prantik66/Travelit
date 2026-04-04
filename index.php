@@ -266,23 +266,6 @@
   </div>
 </div>
 
-<div id="chatbot">
-    <div id="chatbot-button" title="Chat with us">💬</div>
-    <div id="chatbot-window">
-        <div id="chatbot-header">
-            <span>Travelit Assistant</span>
-            <span id="chatbot-close">✖</span>
-        </div>
-        <div id="chatbot-messages">
-            <div class="message bot">Hi! I'm Travelit Bot. Ask me about destinations or packages. ✈️</div>
-        </div>
-        <form id="chatbot-form">
-            <input type="text" id="chatbot-input" placeholder="Ask something..." autocomplete="off" required>
-            <button type="submit">Send</button>
-        </form>
-    </div>
-</div>
-
 <!-- JAVASCRIPT SECTION -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -428,63 +411,8 @@ $(document).ready(function() {
         });
     });
 
-    const chatbotButton = $("#chatbot-button");
-    const chatbotWindow = $("#chatbot-window");
-    const chatbotClose = $("#chatbot-close");
-    const chatbotMessages = $("#chatbot-messages");
-    const chatbotForm = $("#chatbot-form");
-    const chatbotInput = $("#chatbot-input");
-
-    chatbotButton.click(() => chatbotWindow.toggle());
-    chatbotClose.click(() => chatbotWindow.hide());
-
-    const packages = [
-        {name: "Delhi Heritage Experience", destination: "Delhi", price: "₹15,000"},
-        {name: "Kashmir Scenic Retreat", destination: "Kashmir", price: "₹10,000"},
-        {name: "Darjeeling Tea Hills Escape", destination: "Darjeeling", price: "₹8,000"}
-    ];
-
-    chatbotForm.submit(function(e) {
-        e.preventDefault();
-        let msg = chatbotInput.val().trim();
-        if(!msg) return;
-
-        chatbotMessages.append(`<div class="message user">${msg}</div>`);
-        chatbotInput.val("");
-        chatbotMessages.scrollTop(chatbotMessages[0].scrollHeight);
-
-        setTimeout(function() {
-            let lower = msg.toLowerCase();
-            let reply = "";
-
-            const greetings = ["hi", "hello", "hey", "good morning", "good evening"];
-            if(greetings.some(g => lower.includes(g))) {
-                reply = "Hello! 👋 I'm Travelit Bot. I can help you explore packages. Ask about destinations, prices, or trips!";
-            } else if(lower.includes("packages") || lower.includes("trip") || lower.includes("travel") || lower.includes("tour")) {
-                reply = "Here are some popular packages:<br>" +
-                        packages.map(p => `<b>${p.name}</b> — ${p.destination} — ${p.price}`).join("<br>") +
-                        "<br><br>Which destination interests you?";
-            } else if(packages.some(p => lower.includes(p.destination.toLowerCase()))) {
-                const matched = packages.filter(p => lower.includes(p.destination.toLowerCase()));
-                reply = matched.map(p => `<b>${p.name}</b> — ${p.price}<br>Visit our <a href="packages.php" style="color:#c5a47e;">packages page</a> to book!`).join("<br><br>");
-            } else if(lower.includes("recommend") || lower.includes("suggest") || lower.includes("best")) {
-                reply = "I'd recommend:<br>" +
-                        packages.map(p => `<b>${p.name}</b> — ${p.destination} — ${p.price}`).join("<br>") +
-                        "<br><br>Which one catches your eye?";
-            } else if(lower.includes("thanks") || lower.includes("thank you")) {
-                reply = "You're welcome! 😊 Happy travels with Travelit!";
-            } else if(lower.includes("book") || lower.includes("pay") || lower.includes("price")) {
-                reply = "You can book any package on our <a href='packages.php' style='color:#c5a47e;'>Packages page</a>. Just click 'Book Package' to get started!";
-            } else {
-                reply = "I didn't quite catch that. Try asking about destinations, packages, or booking!";
-            }
-
-            chatbotMessages.append(`<div class="message bot">${reply}</div>`);
-            chatbotMessages.scrollTop(chatbotMessages[0].scrollHeight);
-        }, 800);
-    });
 });
 </script>
-
+<script src="//code.tidio.co/tmz4e9ca2y27zyvyjzpdncaikitn4vkh.js" async></script>
 </body>
 </html>

@@ -5,7 +5,7 @@ header("Content-Type: application/json");
 
 $packages = [];
 
-// Check if destination filter exists
+// checking that destination filter exists
 if(isset($_GET['destination_id']) && !empty($_GET['destination_id'])){
 
     $destination_id = intval($_GET['destination_id']);
@@ -32,13 +32,13 @@ if(isset($_GET['destination_id']) && !empty($_GET['destination_id'])){
     $result = $conn->query($sql);
 }
 
-// Fetch packages
+// Package fetching
 if($result && $result->num_rows > 0){
     while($row = $result->fetch_assoc()){
         $packages[] = $row;
     }
 }
 
-// Return JSON
+// Json returnign
 echo json_encode($packages);
 ?>

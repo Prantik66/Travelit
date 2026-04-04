@@ -38,7 +38,7 @@ $bookings = $conn->query("
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bookings Log — Travelit Admin</title>
+<title>Bookings Log - Travelit Admin</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -205,7 +205,7 @@ tr:hover td {
 </span>
 </td>
 
-<td> <!-- ADDED -->
+<td> 
 
 <?php if($row['status'] != 'confirmed'): ?>
 <a href="bookings.php?action=confirm&id=<?= $row['id'] ?>" class="btn btn-success btn-sm">Confirm</a>

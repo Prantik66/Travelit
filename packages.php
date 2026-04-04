@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Browse Travelit's premium travel packages across India. Book Kashmir, Darjeeling, Delhi experiences online.">
-    <title>Travelit — Our Packages</title>
+    <title>Travelit - Our Packages</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -78,7 +78,7 @@
     </div>
 </div>
 
-
+<!--Booking Modal-->
 <div class="modal fade" id="bookingModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content" style="border-radius:16px; overflow:hidden; border:none;">
@@ -315,7 +315,7 @@ $(document).ready(function() {
 function getDestinationImage(destination) {
     const images = {
         "Delhi": "https://blog.lemontreehotels.com/wp-content/uploads/2025/02/Places-to-Visit-in-Delhi.jpg",
-        "Kashmir": "https://media.thekashmirmonitor.net/wp-content/uploads/2023/11/gulmarg-4-_wide-e4eb7356bf7195fbaf7b00ec03326f7f09c47862-scaled.jpg",
+        "Kashmir": "https://www.eurokidsindia.com/blog/wp-content/uploads/2025/03/Exploring-the-Best-Places-to-Visit-in-Kashmir-870x437.jpg",
         "Darjeeling": "https://static2.tripoto.com/media/filter/tst/img/2012133/Image/1662184373_tourism_darjeeling_india_1280x800.jpg.webp"
     };
     return images[destination] || "assets/images/hero.jpg";
