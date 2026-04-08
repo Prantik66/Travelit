@@ -62,7 +62,7 @@ try {
     $mail->Host       = 'smtp.gmail.com';
     $mail->SMTPAuth   = true;
     $mail->Username   = 'kesariyaprantik@gmail.com';
-    $mail->Password   = 'Google INAPP PASS';
+    $mail->Password   = 'xromjgeetutltedq';
     $mail->SMTPSecure = 'tls';
     $mail->Port       = 587;
 
